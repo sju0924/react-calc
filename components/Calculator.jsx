@@ -72,8 +72,10 @@ class Calculator extends React.Component {
           displayValue = displayValue.substr(0, displayValue.length - 1);
           hiddenValue = hiddenValue.substr(0, hiddenValue.length - 1);
         } else if (lastChar !== "") {
-          this.setState({ displayValue: displayValue + ".", hiddenValue :  hiddenValue + "." });
+          displayValue = displayValue + "."; 
+          hiddenValue =  hiddenValue + "." ;
         }
+        this.setState({ displayValue ,hiddenValue });
       },
       "0": () => {
         if (Number(displayValue) !== 0) {
