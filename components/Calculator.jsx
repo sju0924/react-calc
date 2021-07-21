@@ -15,45 +15,64 @@ const evalFunc = function(string) {
 
 class Calculator extends React.Component {
   state = {
-    displayValue: ""
+    displayValue: "",
+    hiddenValue: ""
   };
 
   onClickButton = key => {
-    let { displayValue = "" } = this.state;
+    let { displayValue = "", hiddenValue = ""} = this.state;
     displayValue = "" + displayValue;
+    hiddenValue = "" + hiddenValue;
+   
     const lastChar = displayValue.substr(displayValue.length - 1);
     const operatorKeys = ["÷", "×", "-", "+"];
     const proc = {
       AC: () => {
-        this.setState({ displayValue: "" });
+        this.setState({ displayValue: "" ,hiddenValue: "" });
       },
       BS: () => {
         if (displayValue.length > 0) {
           displayValue = displayValue.substr(0, displayValue.length - 1);
+          hiddenValue = hiddenValue.substr(0, hiddenValue.length - 1);
         }
-        this.setState({ displayValue });
+        this.setState({ displayValue, hiddenValue });
       },
-      "÷": () => {},
-      "×": () => {},
-      "-": () => {},
+      "÷": () => {
+        if (lastChar !== "" && !operatorKeys.includes(lastChar)) {
+          this.setState({ displayValue: displayValue + "÷" , hiddenValue :  hiddenValue + "/"});
+        }
+
+      },
+      "×": () => {
+        if (lastChar !== "" && !operatorKeys.includes(lastChar)) {
+          this.setState({ displayValue: displayValue + "×" , hiddenValue :  hiddenValue + "*" });
+        }
+      },
+      "-": () => {
+        if (lastChar !== "" && !operatorKeys.includes(lastChar)) {
+          this.setState({ displayValue: displayValue + "-",thiddenValue :  hiddenValue + "-" });
+        }
+      },
       "+": () => {
         if (lastChar !== "" && !operatorKeys.includes(lastChar)) {
-          this.setState({ displayValue: displayValue + "+" });
+          this.setState({ displayValue: displayValue + "+", hiddenValue :  hiddenValue + "+" });
         }
       },
       "=": () => {
         if (lastChar !== "" && operatorKeys.includes(lastChar)) {
           displayValue = displayValue.substr(0, displayValue.length - 1);
+          hiddenValue = hiddenValue.substr(0, hiddenValue.length - 1);
         } else if (lastChar !== "") {
-          displayValue = evalFunc(displayValue);
+          displayValue = evalFunc(hiddenValue);
         }
-        this.setState({ displayValue });
+        this.setState({ displayValue ,hiddenValue });
       },
       ".": () => {},
       "0": () => {
         if (Number(displayValue) !== 0) {
           displayValue += "0";
-          this.setState({ displayValue });
+          hiddenValue += "0";
+          this.setState({ displayValue , hiddenValue});
         }
       }
     };
@@ -62,7 +81,7 @@ class Calculator extends React.Component {
       proc[key]();
     } else {
       // 여긴 숫자
-      this.setState({ displayValue: displayValue + key });
+      this.setState({ displayValue: displayValue + key , hiddenValue: hiddenValue + key });
     }
   };
 
